@@ -19,10 +19,10 @@ export class CreateUserDto {
   @ApiProperty({
     description: 'User password',
     example: 'SecurePass@123',
-    minLength: 8,
+    minLength: 6,
   })
   @IsString()
-  @MinLength(8)
+  @MinLength(6)
   password: string;
 
   @ApiProperty({
@@ -34,7 +34,7 @@ export class CreateUserDto {
 
   @ApiProperty({
     description: 'Phone number',
-    example: '+1234567890',
+    example: '+12345667890',
     required: false,
   })
   @IsString()
@@ -58,4 +58,22 @@ export class CreateUserDto {
   @IsString()
   @IsOptional()
   position?: string;
+
+  @ApiProperty({
+    description: 'Avatar URL',
+    example: 'https://example.com/avatar.jpg',
+    required: false,
+  })
+  @IsString()
+  @IsOptional()
+  avatar?: string;
+
+  @ApiProperty({
+    description: 'Bio',
+    example: 'Experienced software engineer',
+    required: false,
+  })
+  @IsString()
+  @IsOptional()
+  bio?: string;
 }

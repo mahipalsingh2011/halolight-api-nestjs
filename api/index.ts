@@ -8,6 +8,8 @@ import { setupSwagger } from '../src/configs/swagger.config';
 import { HttpExceptionFilter } from '../src/common/filters/http-exception.filter';
 
 const expressApp = express();
+// Patch ExpressAdapter to skip router inspection that relies on deprecated app.router getter
+(ExpressAdapter as any).prototype.isMiddlewareApplied = () => false;
 let app: INestApplication | null = null;
 
 async function bootstrap(): Promise<INestApplication> {

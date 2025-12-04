@@ -17,10 +17,13 @@ import { RegisterDto } from './dto/register.dto';
 import { RefreshTokenDto } from './dto/refresh-token.dto';
 import { Public } from '../../common/decorators/public.decorator';
 import { CurrentUser } from '../../common/decorators/current-user.decorator';
+import { AuthService } from './auth.service';
+import { JwtPayload } from '../../common/interfaces/jwt-payload.interface';
 
 @ApiTags('Auth')
 @Controller('auth')
 export class AuthController {
+  constructor(private readonly authService: AuthService) {}
   @Public()
   @Post('login')
   @HttpCode(HttpStatus.OK)
@@ -45,7 +48,7 @@ export class AuthController {
         user: {
           type: 'object',
           properties: {
-            id: { type: 'string', example: 'clx1234567890' },
+            id: { type: 'string', example: 'clx12345667890' },
             email: { type: 'string', example: 'admin@halolight.h7ml.cn' },
             name: { type: 'string', example: 'Admin User' },
             avatar: { type: 'string', example: 'https://avatar.url' },
@@ -56,16 +59,7 @@ export class AuthController {
   })
   @ApiResponse({ status: 401, description: 'Invalid credentials' })
   async login(@Body() loginDto: LoginDto) {
-    return {
-      accessToken: 'mock_access_token',
-      refreshToken: 'mock_refresh_token',
-      user: {
-        id: 'clx1234567890',
-        email: loginDto.email,
-        name: 'Mock User',
-        avatar: null,
-      },
-    };
+    return this.authService.login(loginDto);
   }
 
   @Public()
@@ -97,16 +91,7 @@ export class AuthController {
   @ApiResponse({ status: 400, description: 'Invalid input data' })
   @ApiResponse({ status: 409, description: 'Email or username already exists' })
   async register(@Body() registerDto: RegisterDto) {
-    return {
-      accessToken: 'mock_access_token',
-      refreshToken: 'mock_refresh_token',
-      user: {
-        id: 'clx_new_user',
-        email: registerDto.email,
-        username: registerDto.username,
-        name: registerDto.name,
-      },
-    };
+    return this.authService.register(registerDto);
   }
 
   @Public()
@@ -128,11 +113,8 @@ export class AuthController {
     },
   })
   @ApiResponse({ status: 401, description: 'Invalid refresh token' })
-  async refresh(@Body() _refreshTokenDto: RefreshTokenDto) {
-    return {
-      accessToken: 'new_mock_access_token',
-      refreshToken: 'new_mock_refresh_token',
-    };
+  async refresh(@Body() refreshTokenDto: RefreshTokenDto) {
+    return this.authService.refresh(refreshTokenDto.refreshToken);
   }
 
   @Get('me')
@@ -168,22 +150,8 @@ export class AuthController {
     },
   })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
-  async getCurrentUser(@CurrentUser() _user: any) {
-    return {
-      id: 'clx_current_user',
-      email: 'current@example.com',
-      username: 'currentuser',
-      name: 'Current User',
-      avatar: null,
-      status: 'ACTIVE',
-      roles: [
-        {
-          id: 'role_1',
-          name: 'admin',
-          label: 'Administrator',
-        },
-      ],
-    };
+  async getCurrentUser(@CurrentUser() user: JwtPayload) {
+    return this.authService.getCurrentUser(user.sub);
   }
 
   @Post('logout')
@@ -204,7 +172,11 @@ export class AuthController {
     },
   })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
-  async logout(@CurrentUser() _user: any) {
+  async logout(
+    @CurrentUser() user: JwtPayload,
+    @Body() body?: { refreshToken?: string },
+  ) {
+    await this.authService.logout(user.sub, body?.refreshToken);
     return {
       message: 'Logout successful',
     };

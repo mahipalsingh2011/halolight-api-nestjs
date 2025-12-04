@@ -94,13 +94,14 @@ async function resetDatabase(): Promise<void> {
   });
 
   // 创建用户
-  const hashedPassword = await bcrypt.hash('Demo@123', 10);
+  const adminPassword = await bcrypt.hash('123456', 12);
+  const regularPassword = await bcrypt.hash('1234566', 12);
 
   const adminUser = await prisma.user.create({
     data: {
-      email: 'admin@halolight.cn',
+      email: 'admin@halolight.h7ml.cn',
       username: 'admin',
-      password: hashedPassword,
+      password: adminPassword,
       name: '系统管理员',
       avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=admin',
       status: 'ACTIVE',
@@ -111,9 +112,9 @@ async function resetDatabase(): Promise<void> {
 
   const demoUser = await prisma.user.create({
     data: {
-      email: 'demo@halolight.cn',
+      email: 'demo@halolight.h7ml.cn',
       username: 'demo',
-      password: hashedPassword,
+      password: regularPassword,
       name: '演示用户',
       avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=demo',
       status: 'ACTIVE',
@@ -210,8 +211,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       duration: `${duration}ms`,
       timestamp: new Date().toISOString(),
       accounts: [
-        { email: 'admin@halolight.cn', password: 'Demo@123', role: 'admin' },
-        { email: 'demo@halolight.cn', password: 'Demo@123', role: 'user' },
+        { email: 'admin@halolight.h7ml.cn', password: '123456', role: 'admin' },
+        { email: 'demo@halolight.h7ml.cn', password: '1234566', role: 'user' },
       ],
     });
   } catch (error) {

@@ -3,6 +3,7 @@ import { ValidationPipe } from '@nestjs/common';
 import { AppModule } from './app.module';
 import { setupSwagger } from './configs/swagger.config';
 import { HttpExceptionFilter } from './common/filters/http-exception.filter';
+import { PrismaExceptionFilter } from './common/filters/prisma-exception.filter';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
@@ -32,8 +33,8 @@ async function bootstrap() {
     }),
   );
 
-  // Global exception filter
-  app.useGlobalFilters(new HttpExceptionFilter());
+  // Global exception filters
+  app.useGlobalFilters(new HttpExceptionFilter(), new PrismaExceptionFilter());
 
   // Setup Swagger documentation (always enabled)
   setupSwagger(app);
@@ -48,7 +49,7 @@ async function bootstrap() {
 ║                                                       ║
 ║   Server:      http://localhost:${port}                  ║
 ║   Environment: ${process.env.NODE_ENV || 'development'}                         ║
-║   API Docs:    http://localhost:${port}/api/docs         ║
+║   API Docs:    http://localhost:${port}/docs         ║
 ║                                                       ║
 ╚═══════════════════════════════════════════════════════╝
   `);

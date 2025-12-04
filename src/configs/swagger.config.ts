@@ -38,7 +38,7 @@ export function setupSwagger(app: INestApplication): void {
     .build();
 
   const document = SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('api/docs', app, document, {
+  SwaggerModule.setup('docs', app, document, {
     swaggerOptions: {
       persistAuthorization: true,
       tagsSorter: 'alpha',
@@ -49,6 +49,13 @@ export function setupSwagger(app: INestApplication): void {
     },
     customSiteTitle: 'HaloLight API Documentation',
     customfavIcon: 'https://halolight.h7ml.cn/favicon.ico',
+    // Load Swagger UI assets from CDN to avoid missing static files in serverless
+    customCssUrl:
+      'https://cdn.jsdelivr.net/npm/swagger-ui-dist@5/swagger-ui.css',
+    customJs: [
+      'https://cdn.jsdelivr.net/npm/swagger-ui-dist@5/swagger-ui-bundle.js',
+      'https://cdn.jsdelivr.net/npm/swagger-ui-dist@5/swagger-ui-standalone-preset.js',
+    ],
     customCss: `
       .swagger-ui .topbar { display: none }
       .swagger-ui .info { margin: 50px 0 }

@@ -1,7 +1,10 @@
 import { Injectable } from '@nestjs/common';
+import { PrismaService } from './infrastructure/prisma/prisma.service';
 
 @Injectable()
 export class AppService {
+  constructor(private readonly prisma: PrismaService) {}
+
   getHello(): object {
     return {
       name: 'HaloLight API',
@@ -9,6 +12,7 @@ export class AppService {
       environment: process.env.NODE_ENV || 'development',
       status: 'ok',
       timestamp: new Date().toISOString(),
+      database: 'Use /health/database to check database connection',
     };
   }
 
@@ -138,7 +142,7 @@ export class AppService {
       <div class="hidden md:flex items-center gap-6">
         <a href="#features" class="text-slate-400 hover:text-white text-sm font-medium transition-colors">Features</a>
         <a href="#modules" class="text-slate-400 hover:text-white text-sm font-medium transition-colors">Modules</a>
-        <a href="/api/docs" class="text-slate-400 hover:text-white text-sm font-medium transition-colors">API Docs</a>
+        <a href="/docs" class="text-slate-400 hover:text-white text-sm font-medium transition-colors">API Docs</a>
         <a href="https://github.com/halolight/halolight-api-nestjs" target="_blank" class="text-slate-400 hover:text-white text-sm font-medium transition-colors">GitHub</a>
         <span class="px-3 py-1 text-xs font-semibold rounded-full bg-green-500/20 text-green-400 border border-green-500/30">v1.0.0</span>
       </div>
@@ -161,7 +165,7 @@ export class AppService {
           Swagger 文档自动生成，60+ RESTful API 端点开箱即用。
         </p>
         <div class="flex flex-col sm:flex-row gap-4 mb-12">
-          <a href="/api/docs" class="btn-gradient inline-flex items-center justify-center gap-2 px-7 py-4 text-white font-semibold rounded-xl transition-all">
+          <a href="/docs" class="btn-gradient inline-flex items-center justify-center gap-2 px-7 py-4 text-white font-semibold rounded-xl transition-all">
             📖 查看 API 文档
           </a>
           <a href="https://halolight.docs.h7ml.cn/guide/api-nestjs" class="inline-flex items-center justify-center gap-2 px-7 py-4 bg-slate-800/80 text-white font-semibold rounded-xl border border-slate-700/50 hover:border-primary hover:bg-slate-800 transition-all" target="_blank">
@@ -268,51 +272,51 @@ export class AppService {
         <p class="text-slate-400 text-lg max-w-2xl mx-auto">12 个核心业务模块，覆盖常见企业应用场景</p>
       </div>
       <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-        <a href="/api/docs#/Auth" class="p-5 bg-slate-800/50 border border-slate-700/50 rounded-xl flex items-center gap-4 transition-all module-hover no-underline">
+        <a href="/docs#/Auth" class="p-5 bg-slate-800/50 border border-slate-700/50 rounded-xl flex items-center gap-4 transition-all module-hover no-underline">
           <div class="text-2xl">🔑</div>
           <div><h4 class="font-semibold text-white">Auth</h4><span class="text-sm text-slate-400">5 个端点</span></div>
         </a>
-        <a href="/api/docs#/Users" class="p-5 bg-slate-800/50 border border-slate-700/50 rounded-xl flex items-center gap-4 transition-all module-hover no-underline">
+        <a href="/docs#/Users" class="p-5 bg-slate-800/50 border border-slate-700/50 rounded-xl flex items-center gap-4 transition-all module-hover no-underline">
           <div class="text-2xl">👥</div>
           <div><h4 class="font-semibold text-white">Users</h4><span class="text-sm text-slate-400">5 个端点</span></div>
         </a>
-        <a href="/api/docs#/Roles" class="p-5 bg-slate-800/50 border border-slate-700/50 rounded-xl flex items-center gap-4 transition-all module-hover no-underline">
+        <a href="/docs#/Roles" class="p-5 bg-slate-800/50 border border-slate-700/50 rounded-xl flex items-center gap-4 transition-all module-hover no-underline">
           <div class="text-2xl">🎭</div>
           <div><h4 class="font-semibold text-white">Roles</h4><span class="text-sm text-slate-400">6 个端点</span></div>
         </a>
-        <a href="/api/docs#/Permissions" class="p-5 bg-slate-800/50 border border-slate-700/50 rounded-xl flex items-center gap-4 transition-all module-hover no-underline">
+        <a href="/docs#/Permissions" class="p-5 bg-slate-800/50 border border-slate-700/50 rounded-xl flex items-center gap-4 transition-all module-hover no-underline">
           <div class="text-2xl">🔒</div>
           <div><h4 class="font-semibold text-white">Permissions</h4><span class="text-sm text-slate-400">4 个端点</span></div>
         </a>
-        <a href="/api/docs#/Teams" class="p-5 bg-slate-800/50 border border-slate-700/50 rounded-xl flex items-center gap-4 transition-all module-hover no-underline">
+        <a href="/docs#/Teams" class="p-5 bg-slate-800/50 border border-slate-700/50 rounded-xl flex items-center gap-4 transition-all module-hover no-underline">
           <div class="text-2xl">👨‍👩‍👧‍👦</div>
           <div><h4 class="font-semibold text-white">Teams</h4><span class="text-sm text-slate-400">5 个端点</span></div>
         </a>
-        <a href="/api/docs#/Documents" class="p-5 bg-slate-800/50 border border-slate-700/50 rounded-xl flex items-center gap-4 transition-all module-hover no-underline">
+        <a href="/docs#/Documents" class="p-5 bg-slate-800/50 border border-slate-700/50 rounded-xl flex items-center gap-4 transition-all module-hover no-underline">
           <div class="text-2xl">📄</div>
           <div><h4 class="font-semibold text-white">Documents</h4><span class="text-sm text-slate-400">5 个端点</span></div>
         </a>
-        <a href="/api/docs#/Files" class="p-5 bg-slate-800/50 border border-slate-700/50 rounded-xl flex items-center gap-4 transition-all module-hover no-underline">
+        <a href="/docs#/Files" class="p-5 bg-slate-800/50 border border-slate-700/50 rounded-xl flex items-center gap-4 transition-all module-hover no-underline">
           <div class="text-2xl">📁</div>
           <div><h4 class="font-semibold text-white">Files</h4><span class="text-sm text-slate-400">5 个端点</span></div>
         </a>
-        <a href="/api/docs#/Folders" class="p-5 bg-slate-800/50 border border-slate-700/50 rounded-xl flex items-center gap-4 transition-all module-hover no-underline">
+        <a href="/docs#/Folders" class="p-5 bg-slate-800/50 border border-slate-700/50 rounded-xl flex items-center gap-4 transition-all module-hover no-underline">
           <div class="text-2xl">📂</div>
           <div><h4 class="font-semibold text-white">Folders</h4><span class="text-sm text-slate-400">5 个端点</span></div>
         </a>
-        <a href="/api/docs#/Calendar" class="p-5 bg-slate-800/50 border border-slate-700/50 rounded-xl flex items-center gap-4 transition-all module-hover no-underline">
+        <a href="/docs#/Calendar" class="p-5 bg-slate-800/50 border border-slate-700/50 rounded-xl flex items-center gap-4 transition-all module-hover no-underline">
           <div class="text-2xl">📅</div>
           <div><h4 class="font-semibold text-white">Calendar</h4><span class="text-sm text-slate-400">5 个端点</span></div>
         </a>
-        <a href="/api/docs#/Notifications" class="p-5 bg-slate-800/50 border border-slate-700/50 rounded-xl flex items-center gap-4 transition-all module-hover no-underline">
+        <a href="/docs#/Notifications" class="p-5 bg-slate-800/50 border border-slate-700/50 rounded-xl flex items-center gap-4 transition-all module-hover no-underline">
           <div class="text-2xl">🔔</div>
           <div><h4 class="font-semibold text-white">Notifications</h4><span class="text-sm text-slate-400">5 个端点</span></div>
         </a>
-        <a href="/api/docs#/Messages" class="p-5 bg-slate-800/50 border border-slate-700/50 rounded-xl flex items-center gap-4 transition-all module-hover no-underline">
+        <a href="/docs#/Messages" class="p-5 bg-slate-800/50 border border-slate-700/50 rounded-xl flex items-center gap-4 transition-all module-hover no-underline">
           <div class="text-2xl">💬</div>
           <div><h4 class="font-semibold text-white">Messages</h4><span class="text-sm text-slate-400">5 个端点</span></div>
         </a>
-        <a href="/api/docs#/Dashboard" class="p-5 bg-slate-800/50 border border-slate-700/50 rounded-xl flex items-center gap-4 transition-all module-hover no-underline">
+        <a href="/docs#/Dashboard" class="p-5 bg-slate-800/50 border border-slate-700/50 rounded-xl flex items-center gap-4 transition-all module-hover no-underline">
           <div class="text-2xl">📊</div>
           <div><h4 class="font-semibold text-white">Dashboard</h4><span class="text-sm text-slate-400">5 个端点</span></div>
         </a>
@@ -328,7 +332,7 @@ export class AppService {
           <h2 class="text-4xl font-bold mb-4">开始使用 HaloLight API</h2>
           <p class="text-lg opacity-90 mb-8">查看完整文档，快速集成到你的项目中</p>
           <div class="flex flex-col sm:flex-row gap-4 justify-center">
-            <a href="/api/docs" class="inline-flex items-center justify-center gap-2 px-8 py-4 bg-white text-indigo-600 font-semibold rounded-xl hover:shadow-xl transition-all">
+            <a href="/docs" class="inline-flex items-center justify-center gap-2 px-8 py-4 bg-white text-indigo-600 font-semibold rounded-xl hover:shadow-xl transition-all">
               📖 Swagger 文档
             </a>
             <a href="https://halolight.docs.h7ml.cn/guide/api-nestjs" class="inline-flex items-center justify-center gap-2 px-8 py-4 bg-white/20 text-white font-semibold rounded-xl border border-white/40 hover:bg-white/30 transition-all" target="_blank">
@@ -344,7 +348,7 @@ export class AppService {
   <footer class="py-12 border-t border-slate-700/50">
     <div class="max-w-7xl mx-auto px-6 text-center">
       <div class="flex flex-wrap justify-center gap-8 mb-6">
-        <a href="/api/docs" class="text-slate-400 hover:text-white text-sm transition-colors">API 文档</a>
+        <a href="/docs" class="text-slate-400 hover:text-white text-sm transition-colors">API 文档</a>
         <a href="https://halolight.docs.h7ml.cn/guide/api-nestjs" target="_blank" class="text-slate-400 hover:text-white text-sm transition-colors">在线使用指南</a>
         <a href="https://github.com/halolight/halolight-api-nestjs" target="_blank" class="text-slate-400 hover:text-white text-sm transition-colors">GitHub</a>
         <a href="https://github.com/halolight/halolight-api-nestjs/issues" target="_blank" class="text-slate-400 hover:text-white text-sm transition-colors">问题反馈</a>

@@ -20,11 +20,13 @@ import {
 } from '@nestjs/swagger';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { UsersService } from './users.service';
 
 @ApiTags('Users')
 @ApiBearerAuth('JWT-auth')
 @Controller('users')
 export class UsersController {
+  constructor(private readonly usersService: UsersService) {}
   @Get()
   @ApiOperation({
     summary: 'Get all users',
@@ -73,35 +75,15 @@ export class UsersController {
   async findAll(
     @Query('page') page?: number,
     @Query('limit') limit?: number,
-    @Query('search') _search?: string,
-    @Query('status') _status?: string,
+    @Query('search') search?: string,
+    @Query('status') status?: string,
   ) {
-    return {
-      data: [
-        {
-          id: 'user_1',
-          email: 'user1@example.com',
-          username: 'user1',
-          name: 'User One',
-          status: 'ACTIVE',
-          createdAt: new Date().toISOString(),
-        },
-        {
-          id: 'user_2',
-          email: 'user2@example.com',
-          username: 'user2',
-          name: 'User Two',
-          status: 'ACTIVE',
-          createdAt: new Date().toISOString(),
-        },
-      ],
-      meta: {
-        total: 2,
-        page: page || 1,
-        limit: limit || 10,
-        totalPages: 1,
-      },
-    };
+    return this.usersService.findAll({
+      page,
+      limit,
+      search,
+      ...(status && { status: status as any }),
+    });
   }
 
   @Get(':id')
@@ -109,7 +91,7 @@ export class UsersController {
     summary: 'Get user by ID',
     description: 'Retrieve detailed information of a specific user',
   })
-  @ApiParam({ name: 'id', description: 'User ID', example: 'clx1234567890' })
+  @ApiParam({ name: 'id', description: 'User ID', example: 'clx12345667890' })
   @ApiResponse({
     status: 200,
     description: 'User found',
@@ -143,26 +125,7 @@ export class UsersController {
   })
   @ApiResponse({ status: 404, description: 'User not found' })
   async findOne(@Param('id') id: string) {
-    return {
-      id,
-      email: 'user@example.com',
-      username: 'username',
-      name: 'User Name',
-      avatar: null,
-      status: 'ACTIVE',
-      department: 'Engineering',
-      position: 'Developer',
-      bio: 'Software engineer',
-      roles: [
-        {
-          id: 'role_1',
-          name: 'user',
-          label: 'User',
-        },
-      ],
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-    };
+    return this.usersService.findOne(id);
   }
 
   @Post()
@@ -186,12 +149,7 @@ export class UsersController {
   @ApiResponse({ status: 400, description: 'Invalid input data' })
   @ApiResponse({ status: 409, description: 'Email or username already exists' })
   async create(@Body() createUserDto: CreateUserDto) {
-    return {
-      id: 'new_user_id',
-      email: createUserDto.email,
-      username: createUserDto.username,
-      name: createUserDto.name,
-    };
+    return this.usersService.create(createUserDto);
   }
 
   @Patch(':id')
@@ -216,11 +174,7 @@ export class UsersController {
   })
   @ApiResponse({ status: 404, description: 'User not found' })
   async update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-    return {
-      id,
-      ...updateUserDto,
-      updatedAt: new Date().toISOString(),
-    };
+    return this.usersService.update(id, updateUserDto);
   }
 
   @Delete(':id')
@@ -232,7 +186,7 @@ export class UsersController {
   @ApiParam({ name: 'id', description: 'User ID' })
   @ApiResponse({ status: 204, description: 'User deleted successfully' })
   @ApiResponse({ status: 404, description: 'User not found' })
-  async remove(@Param('id') _id: string) {
-    return;
+  async remove(@Param('id') id: string) {
+    await this.usersService.remove(id);
   }
 }

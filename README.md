@@ -11,7 +11,7 @@
 基于 NestJS 11 的企业级后端 API 实现，支持 JWT 认证、RBAC 权限、Prisma ORM、Swagger 文档，为 HaloLight 多框架管理后台提供强大、可扩展的服务端支持。
 
 - 在线预览：<http://halolight-api-nestjs.h7ml.cn>
-- API 文档：<http://halolight-api-nestjs.h7ml.cn/api/docs>
+- API 文档：<http://halolight-api-nestjs.h7ml.cn/docs>
 - GitHub：<https://github.com/halolight/halolight-api-nestjs>
 
 ## 功能亮点
@@ -145,7 +145,7 @@ pnpm prisma:studio    # 打开 Prisma Studio（数据库 GUI）
 
 ### 📖 在线文档
 
-- **Swagger API 文档**：<http://halolight-api-nestjs.h7ml.cn/api/docs> - 交互式 API 测试与调试
+- **Swagger API 文档**：<http://halolight-api-nestjs.h7ml.cn/docs> - 交互式 API 测试与调试
 - **完整使用指南（中文）**：<https://halolight.docs.h7ml.cn/guide/api-nestjs> - 详细的 API 参考和使用示例
 - **完整使用指南（英文）**：<https://halolight.docs.h7ml.cn/en/guide/api-nestjs> - Full API reference in English
 
@@ -234,7 +234,7 @@ docker run -p 3000:3000 --env-file .env halolight-api-nestjs
 ## 相关链接
 
 - [在线预览](http://halolight-api-nestjs.h7ml.cn)
-- [API 文档](http://halolight-api-nestjs.h7ml.cn/api/docs)
+- [API 文档](http://halolight-api-nestjs.h7ml.cn/docs)
 - [HaloLight 文档](https://github.com/halolight/docs)
 - [HaloLight Next.js](https://github.com/halolight/halolight)
 - [HaloLight Vue](https://github.com/halolight/halolight-vue)

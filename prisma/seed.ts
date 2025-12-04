@@ -4,7 +4,7 @@ import * as bcrypt from 'bcryptjs';
 const prisma = new PrismaClient();
 
 async function hashPassword(password: string): Promise<string> {
-  return bcrypt.hash(password, 10);
+  return bcrypt.hash(password, 12); // Match AuthService hash rounds
 }
 
 async function main() {
@@ -170,13 +170,16 @@ async function main() {
 
   // ==================== USERS ====================
   console.log('👥 Creating users...');
-  const hashedPassword = await hashPassword('Demo@123');
+
+  // Different passwords for different users
+  const adminPassword = await hashPassword('123456');
+  const regularPassword = await hashPassword('1234566');
 
   const adminUser = await prisma.user.create({
     data: {
-      email: 'admin@halolight.cn',
+      email: 'admin@halolight.h7ml.cn',
       username: 'admin',
-      password: hashedPassword,
+      password: adminPassword,
       name: '系统管理员',
       avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=admin',
       status: UserStatus.ACTIVE,
@@ -188,9 +191,9 @@ async function main() {
 
   const managerUser = await prisma.user.create({
     data: {
-      email: 'manager@halolight.cn',
+      email: 'manager@halolight.h7ml.cn',
       username: 'manager',
-      password: hashedPassword,
+      password: regularPassword,
       name: '张经理',
       avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=manager',
       status: UserStatus.ACTIVE,
@@ -202,9 +205,9 @@ async function main() {
 
   const demoUser = await prisma.user.create({
     data: {
-      email: 'demo@halolight.cn',
+      email: 'demo@halolight.h7ml.cn',
       username: 'demo',
-      password: hashedPassword,
+      password: regularPassword,
       name: '演示用户',
       avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=demo',
       status: UserStatus.ACTIVE,
@@ -217,9 +220,9 @@ async function main() {
   const users = await Promise.all([
     prisma.user.create({
       data: {
-        email: 'zhangsan@halolight.cn',
+        email: 'zhangsan@halolight.h7ml.cn',
         username: 'zhangsan',
-        password: hashedPassword,
+        password: regularPassword,
         name: '张三',
         avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=zhangsan',
         status: UserStatus.ACTIVE,
@@ -229,9 +232,9 @@ async function main() {
     }),
     prisma.user.create({
       data: {
-        email: 'lisi@halolight.cn',
+        email: 'lisi@halolight.h7ml.cn',
         username: 'lisi',
-        password: hashedPassword,
+        password: regularPassword,
         name: '李四',
         avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=lisi',
         status: UserStatus.ACTIVE,
@@ -241,9 +244,9 @@ async function main() {
     }),
     prisma.user.create({
       data: {
-        email: 'wangwu@halolight.cn',
+        email: 'wangwu@halolight.h7ml.cn',
         username: 'wangwu',
-        password: hashedPassword,
+        password: regularPassword,
         name: '王五',
         avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=wangwu',
         status: UserStatus.ACTIVE,
@@ -253,9 +256,9 @@ async function main() {
     }),
     prisma.user.create({
       data: {
-        email: 'zhaoliu@halolight.cn',
+        email: 'zhaoliu@halolight.h7ml.cn',
         username: 'zhaoliu',
-        password: hashedPassword,
+        password: regularPassword,
         name: '赵六',
         avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=zhaoliu',
         status: UserStatus.INACTIVE,
@@ -715,9 +718,13 @@ async function main() {
   console.log('   - 5 notifications');
   console.log('   - 4 activity logs');
   console.log('\n🔑 Demo Accounts:');
-  console.log('   - admin@halolight.cn / Demo@123 (Admin)');
-  console.log('   - manager@halolight.cn / Demo@123 (Manager)');
-  console.log('   - demo@halolight.cn / Demo@123 (User)');
+  console.log('   - admin@halolight.h7ml.cn / 123456 (Admin)');
+  console.log('   - manager@halolight.h7ml.cn / 1234566 (Manager)');
+  console.log('   - demo@halolight.h7ml.cn / 1234566 (User)');
+  console.log('   - zhangsan@halolight.h7ml.cn / 1234566 (User)');
+  console.log('   - lisi@halolight.h7ml.cn / 1234566 (User)');
+  console.log('   - wangwu@halolight.h7ml.cn / 1234566 (Viewer)');
+  console.log('   - zhaoliu@halolight.h7ml.cn / 1234566 (Inactive)');
 }
 
 main()
