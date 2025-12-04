@@ -32,7 +32,7 @@ export class UpdateUserDto {
 
   @ApiProperty({
     description: 'Phone number',
-    example: '+12345667890',
+    example: '+1234567890',
     required: false,
   })
   @IsString()

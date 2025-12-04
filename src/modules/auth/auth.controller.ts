@@ -48,7 +48,7 @@ export class AuthController {
         user: {
           type: 'object',
           properties: {
-            id: { type: 'string', example: 'clx12345667890' },
+            id: { type: 'string', example: 'clx1234567890' },
             email: { type: 'string', example: 'admin@halolight.h7ml.cn' },
             name: { type: 'string', example: 'Admin User' },
             avatar: { type: 'string', example: 'https://avatar.url' },

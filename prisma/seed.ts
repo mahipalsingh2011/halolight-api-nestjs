@@ -173,7 +173,7 @@ async function main() {
 
   // Different passwords for different users
   const adminPassword = await hashPassword('123456');
-  const regularPassword = await hashPassword('1234566');
+  const regularPassword = await hashPassword('123456');
 
   const adminUser = await prisma.user.create({
     data: {
@@ -719,12 +719,12 @@ async function main() {
   console.log('   - 4 activity logs');
   console.log('\n🔑 Demo Accounts:');
   console.log('   - admin@halolight.h7ml.cn / 123456 (Admin)');
-  console.log('   - manager@halolight.h7ml.cn / 1234566 (Manager)');
-  console.log('   - demo@halolight.h7ml.cn / 1234566 (User)');
-  console.log('   - zhangsan@halolight.h7ml.cn / 1234566 (User)');
-  console.log('   - lisi@halolight.h7ml.cn / 1234566 (User)');
-  console.log('   - wangwu@halolight.h7ml.cn / 1234566 (Viewer)');
-  console.log('   - zhaoliu@halolight.h7ml.cn / 1234566 (Inactive)');
+  console.log('   - manager@halolight.h7ml.cn / 123456 (Manager)');
+  console.log('   - demo@halolight.h7ml.cn / 123456 (User)');
+  console.log('   - zhangsan@halolight.h7ml.cn / 123456 (User)');
+  console.log('   - lisi@halolight.h7ml.cn / 123456 (User)');
+  console.log('   - wangwu@halolight.h7ml.cn / 123456 (Viewer)');
+  console.log('   - zhaoliu@halolight.h7ml.cn / 123456 (Inactive)');
 }
 
 main()

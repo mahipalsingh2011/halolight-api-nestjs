@@ -95,7 +95,7 @@ async function resetDatabase(): Promise<void> {
 
   // 创建用户
   const adminPassword = await bcrypt.hash('123456', 12);
-  const regularPassword = await bcrypt.hash('1234566', 12);
+  const regularPassword = await bcrypt.hash('123456', 12);
 
   const adminUser = await prisma.user.create({
     data: {
@@ -212,7 +212,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       timestamp: new Date().toISOString(),
       accounts: [
         { email: 'admin@halolight.h7ml.cn', password: '123456', role: 'admin' },
-        { email: 'demo@halolight.h7ml.cn', password: '1234566', role: 'user' },
+        { email: 'demo@halolight.h7ml.cn', password: '123456', role: 'user' },
       ],
     });
   } catch (error) {

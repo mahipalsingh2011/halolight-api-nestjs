@@ -91,7 +91,7 @@ export class UsersController {
     summary: 'Get user by ID',
     description: 'Retrieve detailed information of a specific user',
   })
-  @ApiParam({ name: 'id', description: 'User ID', example: 'clx12345667890' })
+  @ApiParam({ name: 'id', description: 'User ID', example: 'clx1234567890' })
   @ApiResponse({
     status: 200,
     description: 'User found',
