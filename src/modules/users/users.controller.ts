@@ -38,7 +38,14 @@ export class UsersController {
   @ApiQuery({
     name: 'status',
     required: false,
-    enum: ['ACTIVE', 'INACTIVE', 'SUSPENDED'],
+    enum: ['all', 'ACTIVE', 'INACTIVE', 'SUSPENDED'],
+    description: 'Filter by user status. Use "all" to include all statuses.',
+  })
+  @ApiQuery({
+    name: 'role',
+    required: false,
+    type: String,
+    description: 'Filter by role name. Use "all" to include all roles.',
   })
   @ApiResponse({
     status: 200,
@@ -77,12 +84,19 @@ export class UsersController {
     @Query('limit') limit?: number,
     @Query('search') search?: string,
     @Query('status') status?: string,
+    @Query('role') role?: string,
   ) {
+    // Convert 'all' to undefined to skip filtering
+    const statusFilter =
+      status && status !== 'all' ? (status as any) : undefined;
+    const roleFilter = role && role !== 'all' ? role : undefined;
+
     return this.usersService.findAll({
       page,
       limit,
       search,
-      ...(status && { status: status as any }),
+      status: statusFilter,
+      role: roleFilter,
     });
   }
 
@@ -188,5 +202,36 @@ export class UsersController {
   @ApiResponse({ status: 404, description: 'User not found' })
   async remove(@Param('id') id: string) {
     await this.usersService.remove(id);
+  }
+
+  @Patch(':id/status')
+  @ApiOperation({
+    summary: 'Update user status',
+    description: 'Update user status (active, inactive, suspended)',
+  })
+  @ApiParam({ name: 'id', description: 'User ID' })
+  @ApiResponse({
+    status: 200,
+    description: 'User status updated successfully',
+  })
+  @ApiResponse({ status: 404, description: 'User not found' })
+  async updateStatus(
+    @Param('id') id: string,
+    @Body() body: { status: string },
+  ) {
+    return this.usersService.update(id, { status: body.status as any });
+  }
+
+  @Post('batch-delete')
+  @ApiOperation({
+    summary: 'Batch delete users',
+    description: 'Delete multiple users at once',
+  })
+  @ApiResponse({ status: 200, description: 'Users deleted successfully' })
+  async batchDelete(@Body() body: { ids: string[] }) {
+    for (const id of body.ids) {
+      await this.usersService.remove(id);
+    }
+    return { success: true, deleted: body.ids.length };
   }
 }

@@ -7,6 +7,7 @@ import {
   HttpStatus,
 } from '@nestjs/common';
 import {
+  ApiBody,
   ApiTags,
   ApiOperation,
   ApiResponse,
@@ -52,6 +53,32 @@ export class AuthController {
             email: { type: 'string', example: 'admin@halolight.h7ml.cn' },
             name: { type: 'string', example: 'Admin User' },
             avatar: { type: 'string', example: 'https://avatar.url' },
+            status: {
+              type: 'string',
+              enum: ['ACTIVE', 'INACTIVE', 'SUSPENDED'],
+            },
+            roles: {
+              type: 'array',
+              items: {
+                type: 'object',
+                properties: {
+                  id: { type: 'string' },
+                  name: { type: 'string' },
+                  label: { type: 'string' },
+                },
+              },
+            },
+            permissions: {
+              type: 'array',
+              items: {
+                type: 'object',
+                properties: {
+                  id: { type: 'string' },
+                  action: { type: 'string' },
+                  resource: { type: 'string' },
+                },
+              },
+            },
           },
         },
       },
@@ -83,6 +110,32 @@ export class AuthController {
             email: { type: 'string' },
             username: { type: 'string' },
             name: { type: 'string' },
+            status: {
+              type: 'string',
+              enum: ['ACTIVE', 'INACTIVE', 'SUSPENDED'],
+            },
+            roles: {
+              type: 'array',
+              items: {
+                type: 'object',
+                properties: {
+                  id: { type: 'string' },
+                  name: { type: 'string' },
+                  label: { type: 'string' },
+                },
+              },
+            },
+            permissions: {
+              type: 'array',
+              items: {
+                type: 'object',
+                properties: {
+                  id: { type: 'string' },
+                  action: { type: 'string' },
+                  resource: { type: 'string' },
+                },
+              },
+            },
           },
         },
       },
@@ -92,6 +145,71 @@ export class AuthController {
   @ApiResponse({ status: 409, description: 'Email or username already exists' })
   async register(@Body() registerDto: RegisterDto) {
     return this.authService.register(registerDto);
+  }
+
+  @Public()
+  @Post('forgot-password')
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({
+    summary: 'Request password reset',
+    description: 'Send a password reset email to the provided address.',
+  })
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        email: { type: 'string', format: 'email', example: 'user@example.com' },
+      },
+      required: ['email'],
+    },
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Reset email sent',
+    schema: {
+      type: 'object',
+      properties: {
+        message: { type: 'string', example: 'Password reset email sent' },
+      },
+    },
+  })
+  @ApiResponse({ status: 404, description: 'Email not found' })
+  async forgotPassword(@Body() body: { email: string }) {
+    // TODO: Implement actual email sending logic
+    return { message: `Password reset email sent to ${body.email}` };
+  }
+
+  @Public()
+  @Post('reset-password')
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({
+    summary: 'Reset password',
+    description: 'Reset user password using the provided token.',
+  })
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        token: { type: 'string', example: 'reset_token_123' },
+        password: { type: 'string', example: 'NewStrongPassword123' },
+      },
+      required: ['token', 'password'],
+    },
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Password reset successful',
+    schema: {
+      type: 'object',
+      properties: {
+        message: { type: 'string', example: 'Password has been reset' },
+      },
+    },
+  })
+  @ApiResponse({ status: 400, description: 'Invalid or expired token' })
+  async resetPassword(@Body() _body: { token: string; password: string }) {
+    // TODO: Implement actual password reset logic
+    return { message: 'Password has been reset' };
   }
 
   @Public()
@@ -143,6 +261,18 @@ export class AuthController {
               id: { type: 'string' },
               name: { type: 'string' },
               label: { type: 'string' },
+            },
+          },
+        },
+        permissions: {
+          type: 'array',
+          items: {
+            type: 'object',
+            properties: {
+              id: { type: 'string' },
+              action: { type: 'string' },
+              resource: { type: 'string' },
+              description: { type: 'string', nullable: true },
             },
           },
         },

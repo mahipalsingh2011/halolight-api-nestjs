@@ -10,10 +10,15 @@ async function bootstrap() {
     logger: ['error', 'warn', 'log', 'debug', 'verbose'],
   });
 
-  // Enable CORS
+  // Enable CORS with explicit origins to support credentials
+  const allowedOrigins = process.env.CORS_ORIGIN?.split(',').map((origin) =>
+    origin.trim(),
+  ) || ['http://localhost:3000'];
   app.enableCors({
-    origin: process.env.CORS_ORIGIN || '*',
+    origin: allowedOrigins,
     credentials: true,
+    methods: ['GET', 'HEAD', 'PUT', 'PATCH', 'POST', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
   });
 
   // Global prefix

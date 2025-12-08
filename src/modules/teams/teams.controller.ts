@@ -10,6 +10,7 @@ import {
 } from '@nestjs/common';
 import {
   ApiBearerAuth,
+  ApiBody,
   ApiOperation,
   ApiParam,
   ApiQuery,
@@ -116,6 +117,52 @@ export class TeamsController {
       id,
       ...updateTeamDto,
       updatedAt: new Date().toISOString(),
+    };
+  }
+
+  @Post(':id/members')
+  @ApiOperation({
+    summary: 'Add team member',
+    description: 'Add a user to a team with an optional role.',
+  })
+  @ApiParam({ name: 'id', description: 'Team ID', example: 'team_1' })
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        userId: { type: 'string', example: 'user_123' },
+        role: { type: 'string', enum: ['admin', 'member'], example: 'member' },
+      },
+      required: ['userId'],
+    },
+  })
+  @ApiResponse({ status: 201, description: 'Member added to team' })
+  @ApiResponse({ status: 404, description: 'Team not found' })
+  async addMember(
+    @Param('id') id: string,
+    @Body() body: { userId: string; role?: 'admin' | 'member' },
+  ) {
+    return {
+      teamId: id,
+      member: { id: body.userId, role: body.role || 'member' },
+      message: 'Member added successfully',
+    };
+  }
+
+  @Delete(':id/members/:userId')
+  @ApiOperation({
+    summary: 'Remove team member',
+    description: 'Remove a user from a team.',
+  })
+  @ApiParam({ name: 'id', description: 'Team ID', example: 'team_1' })
+  @ApiParam({ name: 'userId', description: 'User ID', example: 'user_123' })
+  @ApiResponse({ status: 200, description: 'Member removed from team' })
+  @ApiResponse({ status: 404, description: 'Team or member not found' })
+  async removeMember(@Param('id') id: string, @Param('userId') userId: string) {
+    return {
+      teamId: id,
+      userId,
+      message: 'Member removed successfully',
     };
   }
 

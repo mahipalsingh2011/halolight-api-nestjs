@@ -63,15 +63,42 @@ async function resetDatabase(): Promise<void> {
   await prisma.role.deleteMany();
   await prisma.user.deleteMany();
 
-  // 创建权限
+  // 创建权限 (与 prisma/seed.ts 保持一致)
+  // Permission naming follows frontend convention: resource:action (view/create/edit/delete)
   const permissions = await Promise.all([
+    // [0] Wildcard
     prisma.permission.create({ data: { action: '*', resource: '*', description: 'Full system access' } }),
-    prisma.permission.create({ data: { action: 'users:*', resource: 'users', description: 'Full user management' } }),
-    prisma.permission.create({ data: { action: 'users:read', resource: 'users', description: 'View users' } }),
-    prisma.permission.create({ data: { action: 'documents:*', resource: 'documents', description: 'Full document management' } }),
-    prisma.permission.create({ data: { action: 'documents:read', resource: 'documents', description: 'View documents' } }),
-    prisma.permission.create({ data: { action: 'teams:read', resource: 'teams', description: 'View teams' } }),
-    prisma.permission.create({ data: { action: 'dashboard:read', resource: 'dashboard', description: 'View dashboard' } }),
+    // [1] Dashboard
+    prisma.permission.create({ data: { action: 'dashboard:view', resource: 'dashboard', description: 'View dashboard' } }),
+    // [2-5] Users
+    prisma.permission.create({ data: { action: 'users:view', resource: 'users', description: 'View users' } }),
+    prisma.permission.create({ data: { action: 'users:create', resource: 'users', description: 'Create users' } }),
+    prisma.permission.create({ data: { action: 'users:edit', resource: 'users', description: 'Edit users' } }),
+    prisma.permission.create({ data: { action: 'users:delete', resource: 'users', description: 'Delete users' } }),
+    // [6-7] Analytics
+    prisma.permission.create({ data: { action: 'analytics:view', resource: 'analytics', description: 'View analytics' } }),
+    prisma.permission.create({ data: { action: 'analytics:export', resource: 'analytics', description: 'Export analytics data' } }),
+    // [8-9] Settings
+    prisma.permission.create({ data: { action: 'settings:view', resource: 'settings', description: 'View settings' } }),
+    prisma.permission.create({ data: { action: 'settings:edit', resource: 'settings', description: 'Edit settings' } }),
+    // [10-13] Documents
+    prisma.permission.create({ data: { action: 'documents:view', resource: 'documents', description: 'View documents' } }),
+    prisma.permission.create({ data: { action: 'documents:create', resource: 'documents', description: 'Create documents' } }),
+    prisma.permission.create({ data: { action: 'documents:edit', resource: 'documents', description: 'Edit documents' } }),
+    prisma.permission.create({ data: { action: 'documents:delete', resource: 'documents', description: 'Delete documents' } }),
+    // [14-16] Files
+    prisma.permission.create({ data: { action: 'files:view', resource: 'files', description: 'View files' } }),
+    prisma.permission.create({ data: { action: 'files:upload', resource: 'files', description: 'Upload files' } }),
+    prisma.permission.create({ data: { action: 'files:delete', resource: 'files', description: 'Delete files' } }),
+    // [17-18] Messages
+    prisma.permission.create({ data: { action: 'messages:view', resource: 'messages', description: 'View messages' } }),
+    prisma.permission.create({ data: { action: 'messages:send', resource: 'messages', description: 'Send messages' } }),
+    // [19-20] Calendar
+    prisma.permission.create({ data: { action: 'calendar:view', resource: 'calendar', description: 'View calendar' } }),
+    prisma.permission.create({ data: { action: 'calendar:edit', resource: 'calendar', description: 'Edit calendar events' } }),
+    // [21-22] Notifications
+    prisma.permission.create({ data: { action: 'notifications:view', resource: 'notifications', description: 'View notifications' } }),
+    prisma.permission.create({ data: { action: 'notifications:manage', resource: 'notifications', description: 'Manage notifications' } }),
   ]);
 
   // 创建角色
@@ -83,13 +110,23 @@ async function resetDatabase(): Promise<void> {
   });
 
   // 分配权限
-  await prisma.rolePermission.create({ data: { roleId: adminRole.id, permissionId: permissions[0].id } });
+  // Permission indices: [0] * [1] dashboard:view [2] users:view ... [17] messages:view [18] messages:send ...
+  await prisma.rolePermission.create({ data: { roleId: adminRole.id, permissionId: permissions[0].id } }); // *
   await prisma.rolePermission.createMany({
     data: [
-      { roleId: userRole.id, permissionId: permissions[2].id },
-      { roleId: userRole.id, permissionId: permissions[4].id },
-      { roleId: userRole.id, permissionId: permissions[5].id },
-      { roleId: userRole.id, permissionId: permissions[6].id },
+      { roleId: userRole.id, permissionId: permissions[1].id },  // dashboard:view
+      { roleId: userRole.id, permissionId: permissions[2].id },  // users:view
+      { roleId: userRole.id, permissionId: permissions[6].id },  // analytics:view
+      { roleId: userRole.id, permissionId: permissions[10].id }, // documents:view
+      { roleId: userRole.id, permissionId: permissions[11].id }, // documents:create
+      { roleId: userRole.id, permissionId: permissions[12].id }, // documents:edit
+      { roleId: userRole.id, permissionId: permissions[14].id }, // files:view
+      { roleId: userRole.id, permissionId: permissions[15].id }, // files:upload
+      { roleId: userRole.id, permissionId: permissions[17].id }, // messages:view
+      { roleId: userRole.id, permissionId: permissions[18].id }, // messages:send
+      { roleId: userRole.id, permissionId: permissions[19].id }, // calendar:view
+      { roleId: userRole.id, permissionId: permissions[20].id }, // calendar:edit
+      { roleId: userRole.id, permissionId: permissions[21].id }, // notifications:view
     ],
   });
 

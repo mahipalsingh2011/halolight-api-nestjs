@@ -21,14 +21,7 @@ export interface TokenPair {
 export interface AuthResponse {
   accessToken: string;
   refreshToken: string;
-  user: {
-    id: string;
-    email: string;
-    username: string;
-    name: string;
-    avatar: string | null;
-    status: string;
-  };
+  user: Awaited<ReturnType<UsersService['findOne']>>;
 }
 
 /**
@@ -78,16 +71,12 @@ export class AuthService {
 
     this.logger.log(`User registered successfully: ${user.email}`);
 
+    // Fetch complete user profile with roles and permissions
+    const profile = await this.usersService.findOne(user.id);
+
     return {
       ...tokens,
-      user: {
-        id: user.id,
-        email: user.email,
-        username: user.username,
-        name: user.name,
-        avatar: user.avatar,
-        status: user.status,
-      },
+      user: profile,
     };
   }
 
@@ -126,16 +115,12 @@ export class AuthService {
 
     this.logger.log(`User logged in successfully: ${user.email}`);
 
+    // Fetch complete user profile with roles and permissions
+    const profile = await this.usersService.findOne(user.id);
+
     return {
       ...tokens,
-      user: {
-        id: user.id,
-        email: user.email,
-        username: user.username,
-        name: user.name,
-        avatar: user.avatar,
-        status: user.status,
-      },
+      user: profile,
     };
   }
 

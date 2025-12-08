@@ -16,8 +16,8 @@ export class UsersService {
   /**
    * Retrieve paginated list of users with optional search filtering
    */
-  async findAll(query: PaginationDto & { status?: UserStatus }) {
-    const { page = 1, limit = 20, search, status } = query;
+  async findAll(query: PaginationDto & { status?: UserStatus; role?: string }) {
+    const { page = 1, limit = 20, search, status, role } = query;
     const skip = (page - 1) * limit;
 
     // Build where clause
@@ -29,6 +29,15 @@ export class UsersService {
           { username: { contains: search, mode: 'insensitive' } },
           { name: { contains: search, mode: 'insensitive' } },
         ],
+      }),
+      ...(role && {
+        roles: {
+          some: {
+            role: {
+              name: role,
+            },
+          },
+        },
       }),
     };
 
@@ -87,6 +96,18 @@ export class UsersService {
                 name: true,
                 label: true,
                 description: true,
+                permissions: {
+                  select: {
+                    permission: {
+                      select: {
+                        id: true,
+                        action: true,
+                        resource: true,
+                        description: true,
+                      },
+                    },
+                  },
+                },
               },
             },
           },
@@ -100,10 +121,27 @@ export class UsersService {
     }
 
     // Transform roles array to flatten structure and convert BigInt
+    const roles = user.roles.map(({ role }) => ({
+      ...role,
+      permissions: role.permissions.map((p) => p.permission),
+    }));
+
+    // Extract unique permissions across all roles
+    const permissions = Array.from(
+      roles
+        .flatMap((role) => role.permissions)
+        .reduce(
+          (acc, perm) => acc.set(perm.id, perm),
+          new Map<string, (typeof roles)[number]['permissions'][number]>(),
+        )
+        .values(),
+    );
+
     const transformedUser = {
       ...user,
       quotaUsed: Number(user.quotaUsed), // Convert BigInt to Number
-      roles: user.roles.map((ur) => ur.role),
+      roles,
+      permissions,
     };
 
     return transformedUser;
